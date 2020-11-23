@@ -156,11 +156,11 @@ body {
 	border: 10px solid transparent;
 }
 .chat-msg.left:before {
-	left: -16px;
+	left: -15px;
 	border-right: 12px solid rgb(255, 255, 255);
 }
 .chat-msg.right:before {
-	right: -16px;
+	right: -15px;
 	border-left: 12px solid rgb(255, 255, 255);
 }
 .message {

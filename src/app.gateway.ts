@@ -17,16 +17,20 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 	private logger: Logger = new Logger("AppGateway");
 
 	private users = [];
+	private messages = [];
 
 	@SubscribeMessage("sendMsg")
-	handleMessage(socket: Socket, message): void {
-		socket.to(message.to).emit("getMsg", {
+	handleMessage(socket: Socket, data): void {
+		const message = {
 			from: socket.id,
-			name: message.toName,
-			// to: message.to,
-			date: new Date().toLocaleTimeString(),
-			text: message.text
-		});
+			name: data.name,
+			date: data.date,
+			text: data.text
+		};
+
+		this.messages.push(message);
+
+		socket.to(data.to).emit("getMsg", message);
 	}
 
 	afterInit(server: Server) {
@@ -54,6 +58,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			messages: [{ from: "", to: "", text: "" }]
 		};
 		this.users.push(user);
+		socket.emit("userConnect", user);
 
 		this.users.forEach(toUser => {
 			this.server.to(toUser.id).emit(

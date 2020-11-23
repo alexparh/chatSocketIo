@@ -39,9 +39,10 @@
                         <div class="col-md-12 contentChat">
                             <ul>
                                 <li v-for="message in selectedMessages">
-                                    <div class="chat-msg" :class="{right: !message.from, left: message.from}">
+                                    <div class="chat-msg "
+                                        :class="{right: message.from===me.id, left: message.from!==me.id}">
                                         <div class="chat-info-panel"
-                                            :class="{right: !message.from, left: message.from}">
+                                            :class="{right: message.from===me.id, left: message.from!==me.id}">
                                             <span class="name-msg">{{message.name}}</span>
                                             <span class="time-msg">{{message.date}}</span>
                                             <br>
@@ -56,8 +57,8 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 right-chat-textbox">
-                            <input type="text" placeholder="Start chatting!" class="form-control chat"
-                                v-model="msgText">
+                            <input type="text" placeholder="Start chatting!" class="form-control chat" v-model="msgText"
+                                v-on:keyup.enter="sendMessage">
                             <button type="button" class="btn btn-primary" @click.prevent="sendMessage">Send
                                 message</button>
                         </div>

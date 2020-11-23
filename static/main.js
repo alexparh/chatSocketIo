@@ -17,8 +17,10 @@ const app = new Vue({
 		sendMessage() {
 			if (this.validateInput()) {
 				const message = {
+					from: this.me.id,
 					to: this.selectedUser.id,
-					toName: this.selectedUser.name,
+					name: this.me.name,
+					date: new Date().toLocaleTimeString(),
 					text: this.msgText
 				};
 				this.messages.push(message);
@@ -56,8 +58,14 @@ const app = new Vue({
 				return user.status === "online";
 			});
 		},
+		connect(user) {
+			if (user.id === this.socket.id) {
+				this.me = user;
+				console.log(this.me);
+			}
+		},
 		disconnect(userId) {
-			this.users.find((element, index) => {
+			this.users.find(element => {
 				if (element.id === userId) {
 					element.status = "offline";
 				}
@@ -78,6 +86,9 @@ const app = new Vue({
 		});
 		this.socket.on("usersList", users => {
 			this.updateUsers(users);
+		});
+		this.socket.on("userConnect", user => {
+			this.connect(user);
 		});
 		this.socket.on("userDisconnect", userId => {
 			this.disconnect(userId);
