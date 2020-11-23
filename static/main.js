@@ -74,6 +74,7 @@ const app = new Vue({
 	},
 	computed: {
 		filteredList() {
+			console.log(this.filteredUsers);
 			return this.filteredUsers.filter(user => {
 				return user.name.toLowerCase().includes(this.search.toLowerCase());
 			});

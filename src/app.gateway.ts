@@ -8,6 +8,7 @@ import {
 } from "@nestjs/websockets";
 import { Logger } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
+import bots from "./models/bots";
 
 @WebSocketGateway()
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -21,6 +22,23 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
 	@SubscribeMessage("sendMsg")
 	handleMessage(socket: Socket, data): void {
+		if (data.to.includes("bot")) {
+			const bot = bots.find(bot => {
+				return bot.id === data.to;
+			});
+			if (!bot.hasOwnProperty("chat")) {
+				return;
+			}
+			const message = {
+				from: bot.id,
+				name: bot.name,
+				date: new Date().toLocaleTimeString(),
+				text: bot.chat(data.text)
+			};
+			socket.emit("getMsg", message);
+			return;
+		}
+
 		const message = {
 			from: socket.id,
 			name: data.name,
@@ -35,6 +53,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
 	afterInit(server: Server) {
 		this.logger.log("Init");
+
+		this.users.push(...bots);
 	}
 
 	handleDisconnect(socket: Socket) {
