@@ -15,7 +15,8 @@ const bots = [
 		status: "online",
 		imgUrl:
 			"https://igroutka.net/uploads/posts/2016-12/1483085247_igra-spanch-bob-kto-umnee-ty-ili-patrik_star.jpg",
-		chat: message => {
+		chat: async message => {
+			await new Promise(resolve => setTimeout(resolve, 3000));
 			return [...message].reverse().join("");
 		}
 	},
@@ -24,8 +25,9 @@ const bots = [
 		name: "Spam bot",
 		status: "online",
 		imgUrl: "https://i.pinimg.com/originals/da/7d/57/da7d573723ea84ef0555b46b51567280.jpg",
-		spam: () => {
-			return "spam";
+		message: "spam",
+		getRandomInterval: () => {
+			return Math.random() * 110000 + 10000;
 		}
 	},
 	{

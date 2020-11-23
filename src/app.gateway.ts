@@ -21,7 +21,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 	private messages = [];
 
 	@SubscribeMessage("sendMsg")
-	handleMessage(socket: Socket, data): void {
+	async handleMessage(socket: Socket, data): Promise<void> {
 		if (data.to.includes("bot")) {
 			const bot = bots.find(bot => {
 				return bot.id === data.to;
@@ -33,7 +33,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				from: bot.id,
 				name: bot.name,
 				date: new Date().toLocaleTimeString(),
-				text: bot.chat(data.text)
+				text: await bot.chat(data.text)
 			};
 			socket.emit("getMsg", message);
 			return;
@@ -51,10 +51,30 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		socket.to(data.to).emit("getMsg", message);
 	}
 
+	spam() {
+		const spamBot = bots.find(bot => {
+			return bot.name === "Spam bot";
+		});
+
+		const loop = () => {
+			setTimeout(() => {
+				this.server.emit("getMsg", {
+					from: spamBot.id,
+					name: spamBot.name,
+					date: new Date().toLocaleTimeString(),
+					text: spamBot.message
+				});
+				loop();
+			}, spamBot.getRandomInterval());
+		};
+		loop();
+	}
+
 	afterInit(server: Server) {
 		this.logger.log("Init");
 
 		this.users.push(...bots);
+		this.spam();
 	}
 
 	handleDisconnect(socket: Socket) {
