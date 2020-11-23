@@ -18,15 +18,13 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <script src="scrooll.js"></script>
+    <script src="scroll.js"></script>
 
     <div id="app" class="container">
-        <div class="container main-section">
+        <div class="container">
             <div class="row">
                 <div class="col-md-9 col-sm-9 col-xs-12 right-side">
                     <div class="row">
@@ -35,7 +33,7 @@
                             <p>{{selectedUser.name}}</p>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row main-section">
                         <div class="col-md-12 contentChat">
                             <ul>
                                 <li v-for="message in selectedMessages">
@@ -43,8 +41,10 @@
                                         :class="{right: message.from===me.id, left: message.from!==me.id}">
                                         <div class="chat-info-panel"
                                             :class="{right: message.from===me.id, left: message.from!==me.id}">
-                                            <span class="name-msg">{{message.name}}</span>
-                                            <span class="time-msg">{{message.date}}</span>
+                                            <span class="name-msg"
+                                                :class="{right: message.from===me.id, left: message.from!==me.id}">{{message.name}}</span>
+                                            <span class="time-msg"
+                                                :class="{right: message.from===me.id, left: message.from!==me.id}">{{message.date}}</span>
                                             <br>
                                         </div>
                                         <div class="message">
@@ -57,10 +57,12 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 right-chat-textbox">
-                            <input type="text" placeholder="Start chatting!" class="form-control chat" v-model="msgText"
-                                v-on:keyup.enter="sendMessage">
-                            <button type="button" class="btn btn-primary" @click.prevent="sendMessage">Send
-                                message</button>
+                            <template v-if="selectedUser.id">
+                                <input type="text" placeholder="Start chatting!" class="form-control chat"
+                                    v-model="msgText" v-on:keyup.enter="sendMessage">
+                                <button type="button" class="btn btn-primary" @click.prevent="sendMessage">Send
+                                    message</button>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -80,6 +82,7 @@
                         </ul>
                     </div>
                     <div class="chat-users">
+
                         <ul>
                             <li v-for="user in filteredList" @click="selectUser(user)">
 
@@ -95,6 +98,7 @@
 
                             </li>
                         </ul>
+
                     </div>
                     <div class="searchbox">
                         <input v-model="search" class="form-control search" placeholder="Search..." type="text">

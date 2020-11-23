@@ -61,7 +61,6 @@ const app = new Vue({
 		connect(user) {
 			if (user.id === this.socket.id) {
 				this.me = user;
-				console.log(this.me);
 			}
 		},
 		disconnect(userId) {
@@ -74,7 +73,6 @@ const app = new Vue({
 	},
 	computed: {
 		filteredList() {
-			console.log(this.filteredUsers);
 			return this.filteredUsers.filter(user => {
 				return user.name.toLowerCase().includes(this.search.toLowerCase());
 			});
