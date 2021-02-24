@@ -1,8 +1,11 @@
 ## Description
 
 Simple chat with 5 bots.
+
 [Vue.js](https://www.npmjs.com/package/vue)
+
 [Socket.io](https://www.npmjs.com/package/socket.io) 
+
 [Nest](https://github.com/nestjs/nest).
 
 ## Installation
