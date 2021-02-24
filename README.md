@@ -6,7 +6,7 @@ Simple chat with 5 bots.
 
 [Socket.io](https://www.npmjs.com/package/socket.io) 
 
-[Nest](https://github.com/nestjs/nest).
+[Nest](https://github.com/nestjs/nest)
 
 ## Installation
 
